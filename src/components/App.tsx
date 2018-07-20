@@ -34,11 +34,21 @@ class App extends React.Component<{}, IState> {
     );
   }
 
+  private setCustomerView(view: CustomerView): void {
+    this.setState({
+      customerView: view
+    });
+  }
+
+  private addToBalance(value: number): void {
+    console.log("addToBalance", value);
+  }
+
   private getCustomerView(): JSX.Element {
     switch(this.state.customerView) {
       default:
       case CustomerView.AddToBalance:
-        return <AddToBalance selectedCustomer={this.state.selectedCustomer} />;
+        return <AddToBalance onClick={this.addToBalance} />;
       case CustomerView.PayBalance:
         return <span>PayBalance</span>;
     }
@@ -46,12 +56,28 @@ class App extends React.Component<{}, IState> {
 
   private getTabs(): JSX.Element {
     return (
-      <div>
+      <div className="customer-box">
         <ul className="nav nav-tabs">
-          <li><a href="#">Add</a></li>
-          <li><a href="#">Pay</a></li>
+          <li className="nav-item">
+            <a
+              href="#"  
+              className={`nav-link ${this.state.customerView === CustomerView.AddToBalance ? "active" : ""}`} 
+              onClick={()=> this.setCustomerView(CustomerView.AddToBalance)}
+            >
+              Add
+            </a>
+            </li>
+          <li className="nav-item">
+          <a
+              href="#"  
+              className={`nav-link ${this.state.customerView === CustomerView.PayBalance ? "active" : ""}`} 
+              onClick={()=> this.setCustomerView(CustomerView.PayBalance)}
+            >Pay</a>
+            </li>
         </ul>
-        {this.getCustomerView()}
+        <div className="customer-box-container">
+          {this.getCustomerView()}
+        </div>
       </div>
     );
   }

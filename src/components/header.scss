@@ -3,6 +3,12 @@ header {
   padding-top: 20px;
   padding-bottom: 20px;
 
+  &:after {
+    display: block;
+    content: '';
+    clear: both;
+  }
+
   .logo {
     float: left;
     width: 105px;
