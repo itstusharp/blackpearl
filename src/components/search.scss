@@ -1,0 +1,10 @@
+.input-box {
+  float: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -50px; /* margin is -0.5 * dimension */
+  margin-top: -25px; 
+  width: 200px;
+  height: 250px;
+}
