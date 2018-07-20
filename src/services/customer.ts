@@ -1,6 +1,7 @@
 
 import { LocalStorage, StorageKey } from '../services/localStorage';
 import ICustomer from '../models/customer';
+import { customers } from '../mocks/customers';
 
 export class Customer 
 {
@@ -8,6 +9,10 @@ export class Customer
     
     constructor(){
         this.localStorage = new LocalStorage();
+        const currentCustomer = this.localStorage.getData(StorageKey.Customers);
+        if(!currentCustomer){
+            this.updateCustomers(customers);
+        }
     }
 
     public getCustomers(): ICustomer[]
@@ -15,9 +20,9 @@ export class Customer
         return this.localStorage.getData(StorageKey.Customers);
     }
 
-    public updateCustomers(customers: ICustomer): boolean
+    public updateCustomers(c: ICustomer[]): boolean
     {
-        this.localStorage.setData(StorageKey.Customers, customers);
+        this.localStorage.setData(StorageKey.Customers, c);
         return true;
     }
 

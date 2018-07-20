@@ -3,7 +3,8 @@ import './search.scss';
 import ICustomer from '../models/customer'
 
 interface IProps {
-  customers: ICustomer[]
+  customers: ICustomer[];
+  onClick: (customer: ICustomer) => void;
 }
 
 interface IState {
@@ -30,16 +31,26 @@ class Search extends React.Component<IProps, IState> {
           value={this.state.searchValue}
           onChange={this.getCustomersFromLocalStorage}/>
         </label>
-        </div>
+        <ul>
+          {this.state.filteredCutomers.map((f, i) => (
+            <li key={i}>
+              <a href="#" onClick={()=>this.props.onClick(f)}>{f.email}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
         
     );
   }
 
   private getCustomersFromLocalStorage = (e:React.FormEvent<HTMLInputElement>) =>
   {
-    const value = e.currentTarget.value;
+    const searchValue = e.currentTarget.value;
+    const filteredCutomers = searchValue === "" ? [] : this.props.customers.filter(c => c.email.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1);
+    
     this.setState({
-      searchValue: value
+      filteredCutomers,
+      searchValue
     })
   }
 }

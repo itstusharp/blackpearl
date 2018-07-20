@@ -13,6 +13,10 @@ export class LocalStorage {
     public getData(key: StorageKey): any
     {
         const item = window.localStorage.getItem(StorageKey[key]) || '';
-        return JSON.parse(item);
+        if(item){
+            return JSON.parse(item);
+        }
+            
+        return null;
     }
 }

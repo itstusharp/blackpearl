@@ -4,6 +4,7 @@ import './App.scss';
 import ICustomer from '../models/customer';
 import AddToBalance from './addToBalance';
 import Search from './search';
+import { Customer } from '../services/customer';
 
 enum CustomerView {
   AddToBalance, PayBalance
@@ -11,27 +12,44 @@ enum CustomerView {
 
 interface IState {
   selectedCustomer?: ICustomer;
-  customerView: CustomerView
+  customerView: CustomerView;
+  customers: ICustomer[];
 }
 
 class App extends React.Component<{}, IState> {
+
+  private customerService: Customer;
 
   constructor(props: {}){
     super(props);
     this.state = {
       customerView: CustomerView.AddToBalance,
-      selectedCustomer: { email: "email@ding.com", balance: 0 }
+      customers: []
     }
+
+    this.customerService = new Customer();
+
   }
 
   public render() {
     return (
       <div className="container">
         <Header selectedCustomer={this.state.selectedCustomer} />
-        <Search customers={[]}/>
         {this.getView()}    
       </div>
     );
+  }
+
+  public componentDidMount(): void {
+    this.setState({
+      customers: this.customerService.getCustomers()
+    })
+  }
+
+  private setCustomer = (customer: ICustomer): void => {
+    this.setState({
+      selectedCustomer: customer
+    })
   }
 
   private setCustomerView(view: CustomerView): void {
@@ -85,7 +103,7 @@ class App extends React.Component<{}, IState> {
   private getView(): JSX.Element {
     
     return !this.state.selectedCustomer 
-      ? <span>search</span>
+      ? <Search customers={this.state.customers} onClick={this.setCustomer}/>
       : this.getTabs()
   }
 }
