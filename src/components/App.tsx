@@ -3,6 +3,7 @@ import * as React from 'react';
 import './App.scss';
 import ICustomer from '../models/customer';
 import AddToBalance from './addToBalance';
+import Search from './search';
 
 enum CustomerView {
   AddToBalance, PayBalance
@@ -27,6 +28,7 @@ class App extends React.Component<{}, IState> {
     return (
       <div className="container">
         <Header selectedCustomer={this.state.selectedCustomer} />
+        <Search customers={[]}/>
         {this.getView()}    
       </div>
     );
