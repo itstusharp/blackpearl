@@ -5,7 +5,7 @@ class App extends React.Component {
   public render() {
     return (
       <div className="App">
-        this is the app component...
+        <button className="btn btn-primary">test</button>
       </div>
     );
   }
