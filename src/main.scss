@@ -10,3 +10,10 @@ body {
   background-size: cover;
 }
 
+html, body, .container, #root {
+  height: 100%;
+}  
+
+.container {
+  position: relative;
+}  

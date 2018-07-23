@@ -1,10 +1,52 @@
-.input-box {
-  float: center;
+@import "../../node_modules/bootstrap/scss/functions";
+@import '../_customVariables.scss';
+
+.input-box-container {
   position: absolute;
   top: 50%;
-  left: 50%;
-  margin-left: -50px; /* margin is -0.5 * dimension */
-  margin-top: -25px; 
-  width: 200px;
-  height: 250px;
+  left: 15px;
+  right: 15px;
+}
+
+.input-box {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.search-results {
+  position: absolute;
+  width: 100%;
+  max-width: 600px;
+  top: 100%;
+  background-color: #fff;
+  border-radius: 6px;
+  border: 1px solid $input-border-color;
+  max-height: 200px;
+  overflow-y: scroll;
+
+  &, li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  li {
+    
+
+    a, {
+      display: block;
+      padding: 12px;
+      color: $gray-600;
+      text-decoration: none;
+
+      &:hover, &:visited {
+        text-decoration: none;
+      }
+
+      &:hover {
+        background-color: $gray-200;
+      }
+    }
+  }
+
 }

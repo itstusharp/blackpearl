@@ -22,22 +22,34 @@ class Search extends React.Component<IProps, IState> {
   }
   public render() {
     return (
-      <div className = "input-box">
-        <label>
-          Name:
-        <input 
-          type="text"
-          name="name"
-          value={this.state.searchValue}
-          onChange={this.getCustomersFromLocalStorage}/>
-        </label>
-        <ul>
-          {this.state.filteredCutomers.map((f, i) => (
-            <li key={i}>
-              <a href="#" onClick={()=>this.props.onClick(f)}>{f.email}</a>
-            </li>
-          ))}
-        </ul>
+      <div className="input-box-container">
+        <div className="input-box">
+          <div className="input-group input-group-lg">
+            <div className="input-group-prepend">
+              <span className="input-group-text" id="inputGroup-sizing-lg">@</span>
+            </div>
+            <input 
+              type="text"
+              name="name"
+              placeholder="Enter your Ding Email"
+              className="form-control"
+              aria-label="Large"
+              value={this.state.searchValue}
+              onChange={this.getCustomersFromLocalStorage}/>
+            <div className="input-group-append">
+              <span className="input-group-text" id="inputGroup-sizing-lg">></span>
+            </div>
+          </div>
+          {this.state.filteredCutomers.length > 0 ? (
+            <ul className="search-results">
+              {this.state.filteredCutomers.map((f, i) => (
+                <li key={i}>
+                  <a href="#" onClick={()=>this.props.onClick(f)}>{f.email}</a>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>        
       </div>
         
     );
