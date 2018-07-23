@@ -1,16 +1,15 @@
+@import "../../node_modules/bootstrap/scss/functions";
+@import '../sass/_customVariables.scss';
+
 .customer-box {
-  border: 1px solid #ccc;
+  border: 1px solid $gray-600;
   border-radius: 4px;
   background-color: #fff;
-  max-width: 600px;
+  max-width: 500px;
   margin: 0 auto;
 
   .nav {
     padding: 20px 20px 0px 20px;
   }
-  
-  .buttons-container {
-    padding: 20px 20px 5px 20px;
-  }
-  
+
 }

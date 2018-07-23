@@ -3,7 +3,9 @@ import './header.scss';
 import ICustomer from '../models/customer';
 
 interface IProps {
-  selectedCustomer?: ICustomer
+  selectedAmount: number;
+  selectedCustomer?: ICustomer,
+  onClick: ()=>void
 }
 
 class Header extends React.Component<IProps> {
@@ -11,9 +13,9 @@ class Header extends React.Component<IProps> {
     const customer = this.props.selectedCustomer;
     return (
       <header className="main-header">
-        <div className="logo" />
+        <div className="logo" onClick={this.props.onClick}/>
         <div className="customer-data">
-          {customer ? <span>{customer.email} | balance: $ {customer.balance}</span> : null}
+          {customer ? <span>{customer.email} | balance: $ {customer.balance + this.props.selectedAmount}</span> : null}
         </div>
       </header>
     );

@@ -1,0 +1,36 @@
+@import "../../node_modules/bootstrap/scss/functions";
+@import '../sass/_customVariables.scss';
+
+.custom-hr {
+  width: 100%;
+  overflow: hidden;
+  max-width: 100%;
+  text-align: center;
+  
+  .hr-content {
+    margin: 0 auto;
+    text-align: center;
+    width: auto;
+    position: relative;
+    display: inline-block;
+    padding: 15px;
+
+    .hr-left, .hr-right {
+      background-color: $gray-600;
+      top:50%;
+      width: 1000px;
+      height: 1px;
+      position: absolute;
+    }
+    
+    .hr-left {    
+      right: 100%;
+    }
+  
+    .hr-right {
+      left: 100%;
+    }
+
+  } 
+
+}

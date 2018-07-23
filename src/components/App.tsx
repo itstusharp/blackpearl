@@ -2,29 +2,32 @@ import Header from './header';
 import * as React from 'react';
 import './App.scss';
 import ICustomer from '../models/customer';
-import AddToBalance from './addToBalance';
 import Search from './search';
+import ManageBalance from './manageBalance';
 import { Customer } from '../services/customer';
 
-enum CustomerView {
-  AddToBalance, PayBalance
-}
-
 interface IState {
+  selectedAmount: number;
   selectedCustomer?: ICustomer;
-  customerView: CustomerView;
   customers: ICustomer[];
+  countDown: number;
+  error: string;
 }
 
 class App extends React.Component<{}, IState> {
 
   private customerService: Customer;
+  private countDown: NodeJS.Timer;
+  private duration: number = 4;
+  private maxBalance: number = 30;
 
   constructor(props: {}){
     super(props);
     this.state = {
-      customerView: CustomerView.AddToBalance,
-      customers: []
+      countDown: 0,
+      customers: [],
+      error: "",
+      selectedAmount: 0
     }
 
     this.customerService = new Customer();
@@ -32,12 +35,21 @@ class App extends React.Component<{}, IState> {
   }
 
   public render() {
+
     return (
       <div className="container">
-        <Header selectedCustomer={this.state.selectedCustomer} />
+        <Header
+          selectedAmount={this.state.selectedAmount}
+          selectedCustomer={this.state.selectedCustomer} 
+          onClick={this.backToHome}
+        />
         {this.getView()}    
       </div>
     );
+  }
+
+  public componentWillUnmount(): void {
+    clearInterval(this.countDown);
   }
 
   public componentDidMount(): void {
@@ -46,66 +58,110 @@ class App extends React.Component<{}, IState> {
     })
   }
 
-  private setCustomer = (customer: ICustomer): void => {
-    this.setState({
-      selectedCustomer: customer
-    })
+  private getView(): JSX.Element {
+
+    if(!this.state.selectedCustomer) {
+      return <Search customers={this.state.customers} onClick={this.setCustomer}/>;
+    }
+
+    if(this.state.selectedAmount) {
+      return (
+        <div className="customer-box">
+          <div className="add-to-balance">
+            <div className="buttons-container">
+              <p className="text-center">
+                You have just added € {this.state.selectedAmount} to you Balance.<br />
+                Your current balance is<br />
+                <b>€ {this.state.selectedAmount + this.state.selectedCustomer.balance}</b>
+              </p>
+              <button
+                className="btn btn-outline-gray btn-lg btn-block" 
+                onClick={this.abortUpdate}>
+                Ops... wrong choice, cancel ({this.duration - this.state.countDown})
+              </button>
+            </div>        
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <ManageBalance
+        error={this.state.error} 
+        selectedAmount={this.state.selectedAmount}
+        onCancel={this.abortUpdate}
+        onBalanceChange={this.setAmount} />
+    )
+
   }
 
-  private setCustomerView(view: CustomerView): void {
+  private backToHome = () => {
     this.setState({
-      customerView: view
+      error: "",
+      selectedCustomer: undefined
     });
   }
 
-  private addToBalance(value: number): void {
-    console.log("addToBalance", value);
+  private setCustomer = (customer: ICustomer): void => {
+    this.setState({
+      selectedCustomer: customer
+    });
   }
 
-  private getCustomerView(): JSX.Element {
-    switch(this.state.customerView) {
-      default:
-      case CustomerView.AddToBalance:
-        return <AddToBalance onClick={this.addToBalance} />;
-      case CustomerView.PayBalance:
-        return <span>PayBalance</span>;
+  private setAmount = (amount: number): void => {
+    if(this.state.selectedCustomer){
+      if(this.state.selectedCustomer.balance + amount > this.maxBalance) {
+        this.setState({
+          error: "Sorry, it's not possible to add the chosen amount, your Balance cannot exceed € 30.00"
+        })
+      } else {
+        this.setState({
+          error: "",
+          selectedAmount: amount
+        }, () => {
+          clearInterval(this.countDown);
+          this.countDown = setInterval(this.updateCountDown, 1000);
+        });
+      }
     }
   }
 
-  private getTabs(): JSX.Element {
-    return (
-      <div className="customer-box">
-        <ul className="nav nav-tabs">
-          <li className="nav-item">
-            <a
-              href="#"  
-              className={`nav-link ${this.state.customerView === CustomerView.AddToBalance ? "active" : ""}`} 
-              onClick={()=> this.setCustomerView(CustomerView.AddToBalance)}
-            >
-              Add
-            </a>
-            </li>
-          <li className="nav-item">
-          <a
-              href="#"  
-              className={`nav-link ${this.state.customerView === CustomerView.PayBalance ? "active" : ""}`} 
-              onClick={()=> this.setCustomerView(CustomerView.PayBalance)}
-            >Pay</a>
-            </li>
-        </ul>
-        <div className="customer-box-container">
-          {this.getCustomerView()}
-        </div>
-      </div>
-    );
+  private updateCountDown = (): void => {
+    if(this.state.countDown < this.duration) {
+      this.setState({
+        countDown: this.state.countDown + 1
+      });
+    } else {
+      clearInterval(this.countDown);
+      this.updateBalance()
+    }
   }
 
-  private getView(): JSX.Element {
-    
-    return !this.state.selectedCustomer 
-      ? <Search customers={this.state.customers} onClick={this.setCustomer}/>
-      : this.getTabs()
+  private updateBalance = (): void => {
+    const selectedCustomer = this.state.selectedCustomer;
+    if(selectedCustomer){
+      selectedCustomer.balance += this.state.selectedAmount;
+      this.setState({
+        selectedCustomer
+      }, ()=>{
+        this.customerService.updateCustomers(this.state.customers);
+        this.setState({
+          countDown: 0,
+          selectedAmount: 0,
+          selectedCustomer: undefined,
+        })
+      });
+    }
   }
+
+  private abortUpdate = (): void => {
+    clearInterval(this.countDown);
+    this.setState({
+      countDown: 0,
+      selectedAmount: 0
+    });
+  }
+
 }
 
 export default App;
