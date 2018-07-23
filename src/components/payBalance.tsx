@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Hr from './hr';
 import './addToBalance.scss';
 
 interface IProps {
@@ -8,18 +7,16 @@ interface IProps {
   onCancel: () => void;
 }
 
-class AddToBalance extends React.Component<IProps> {
+class PayBalance extends React.Component<IProps> {
 
-  private customBalance: React.RefObject<HTMLInputElement>;
+  private amount: React.RefObject<HTMLInputElement>;
 
   constructor(props: IProps){
     super(props);
-    this.customBalance = React.createRef();
+    this.amount = React.createRef();
   }
 
   public render() {
-
-    const numbers = [1,2,5];
 
     return (
       <div className="add-to-balance">
@@ -29,24 +26,12 @@ class AddToBalance extends React.Component<IProps> {
               <strong>Error!</strong> {this.props.error}
             </div>
           ) : null}
-          <div className="row">
-            {numbers.map((n,i)=>(
-              <div key={i} className="col">
-                <button
-                  className="btn btn-money btn-outline-gray btn-lg btn-block" 
-                  onClick={()=>this.props.onBalanceChange(n)}>
-                  € <b>{n}</b>.00
-                </button>
-              </div>
-            ))}
-          </div>
-          <Hr>Or</Hr>
           <div>
-            <p className="text-center">Add another amount</p>
+            <p className="text-center">Pay your Balance now!</p>
             <div className="row">
               <div className="col">
                 <input
-                  ref={this.customBalance}
+                  ref={this.amount}
                   type="number"
                   placeholder="Enter amount"
                   className="form-control form-control-lg" />
@@ -66,12 +51,12 @@ class AddToBalance extends React.Component<IProps> {
   }
 
   private addCustomBalance = (): void => {
-    if(this.customBalance.current) {
-      const value = this.customBalance.current.value;
-      this.props.onBalanceChange(parseInt(value, 10));
+    if(this.amount.current) {
+      const value = this.amount.current.value;
+      this.props.onBalanceChange(- parseInt(value, 10));
     }
   }
 
 }
 
-export default AddToBalance;
+export default PayBalance;

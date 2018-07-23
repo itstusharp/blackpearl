@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Tabs from './tabs';
 import AddToBalance from './addToBalance';
+import PayBalance from './payBalance';
 
 
 enum CustomerView {
@@ -49,7 +50,7 @@ class ManageBalance extends React.Component<IProps, IState> {
       case CustomerView.AddToBalance:
         return <AddToBalance {...this.props} />;
       case CustomerView.PayBalance:
-        return <span>PayBalance</span>;
+        return <PayBalance {...this.props} />;
     }
   }
 

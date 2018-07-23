@@ -35,10 +35,7 @@ class Search extends React.Component<IProps, IState> {
               className="form-control"
               aria-label="Large"
               value={this.state.searchValue}
-              onChange={this.getCustomersFromLocalStorage}/>
-            <div className="input-group-append">
-              <span className="input-group-text" id="inputGroup-sizing-lg">></span>
-            </div>
+              onChange={this.getCustomersFromLocalStorage}/>            
           </div>
           {this.state.filteredCutomers.length > 0 ? (
             <ul className="search-results">

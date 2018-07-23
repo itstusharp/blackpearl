@@ -110,10 +110,17 @@ class App extends React.Component<{}, IState> {
 
   private setAmount = (amount: number): void => {
     if(this.state.selectedCustomer){
-      if(this.state.selectedCustomer.balance + amount > this.maxBalance) {
+
+      const nextBalance = this.state.selectedCustomer.balance + amount;
+
+      if(nextBalance > this.maxBalance) {
         this.setState({
           error: "Sorry, it's not possible to add the chosen amount, your Balance cannot exceed € 30.00"
         })
+      } else if(nextBalance < 0) {
+        this.setState({
+          error: "Thanks! You are very generous! but it's not possible to pay the chosen amount, you can't pay more than your current balance"
+        });        
       } else {
         this.setState({
           error: "",
