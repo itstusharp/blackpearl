@@ -3,7 +3,7 @@ import * as React from 'react';
 import './App.scss';
 import ICustomer from '../models/customer';
 import Search from './search';
-import ManageBalance from './manageBalance';
+import ManageCredit from './manageCredit';
 import { Customer } from '../services/customer';
 
 interface IState {
@@ -19,7 +19,7 @@ class App extends React.Component<{}, IState> {
   private customerService: Customer;
   private countDown: NodeJS.Timer;
   private duration: number = 4;
-  private maxBalance: number = 30;
+  private maxCredit: number = 30;
 
   constructor(props: {}){
     super(props);
@@ -65,14 +65,19 @@ class App extends React.Component<{}, IState> {
     }
 
     if(this.state.selectedAmount) {
+
+      const message = this.state.selectedAmount > 0 
+        ? `You have just added € ${this.state.selectedAmount} to you Credit.`
+        : `You have just payed € ${-this.state.selectedAmount}.`
+
       return (
         <div className="customer-box">
-          <div className="add-to-balance">
+          <div className="add-to-credit">
             <div className="buttons-container">
               <p className="text-center">
-                You have just added € {this.state.selectedAmount} to you Balance.<br />
-                Your current balance is<br />
-                <b>€ {this.state.selectedAmount + this.state.selectedCustomer.balance}</b>
+                {message}<br />
+                Your current Credit is<br />
+                <b>€ {this.state.selectedAmount + this.state.selectedCustomer.credit}</b>
               </p>
               <button
                 className="btn btn-outline-gray btn-lg btn-block" 
@@ -86,13 +91,22 @@ class App extends React.Component<{}, IState> {
     }
 
     return (
-      <ManageBalance
-        error={this.state.error} 
+      <ManageCredit
+        error={this.state.error}
+        credit={this.state.selectedCustomer ? this.state.selectedCustomer.credit : 0}
         selectedAmount={this.state.selectedAmount}
         onCancel={this.abortUpdate}
-        onBalanceChange={this.setAmount} />
+        onCreditChange={this.setAmount} 
+        onTabClicked={this.onTabClicked}
+        />
     )
 
+  }
+
+  private onTabClicked = (): void => {
+    this.setState({
+      error: ""
+    });
   }
 
   private backToHome = () => {
@@ -111,17 +125,26 @@ class App extends React.Component<{}, IState> {
   private setAmount = (amount: number): void => {
     if(this.state.selectedCustomer){
 
-      const nextBalance = this.state.selectedCustomer.balance + amount;
+      const nextCredit = this.state.selectedCustomer.credit + amount;
 
-      if(nextBalance > this.maxBalance) {
+      if(amount === 0) 
+      {
         this.setState({
-          error: "Sorry, it's not possible to add the chosen amount, your Balance cannot exceed € 30.00"
-        })
-      } else if(nextBalance < 0) {
+          error: `enter a valid amount.`
+        });
+      }
+      else if (nextCredit > this.maxCredit) {
         this.setState({
-          error: "Thanks! You are very generous! but it's not possible to pay the chosen amount, you can't pay more than your current balance"
+          error: "Sorry, it's not possible to add the chosen amount, your Credit cannot exceed € 30.00."
+        });
+      } 
+      else if (nextCredit < 0) {
+        this.setState({
+          error: "Thanks! You are very generous! but it's not possible to pay the chosen amount, you can't pay more than your current Credit."
         });        
-      } else {
+      } 
+      else 
+      {
         this.setState({
           error: "",
           selectedAmount: amount
@@ -140,14 +163,14 @@ class App extends React.Component<{}, IState> {
       });
     } else {
       clearInterval(this.countDown);
-      this.updateBalance()
+      this.updateCredit()
     }
   }
 
-  private updateBalance = (): void => {
+  private updateCredit = (): void => {
     const selectedCustomer = this.state.selectedCustomer;
     if(selectedCustomer){
-      selectedCustomer.balance += this.state.selectedAmount;
+      selectedCustomer.credit += this.state.selectedAmount;
       this.setState({
         selectedCustomer
       }, ()=>{

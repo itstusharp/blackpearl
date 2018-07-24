@@ -1,20 +1,20 @@
 import * as React from 'react';
 import Hr from './hr';
-import './addToBalance.scss';
+import './addToCredit.scss';
 
 interface IProps {
   error: string;
-  onBalanceChange: (value: number)=>void;
+  onCreditChange: (value: number)=>void;
   onCancel: () => void;
 }
 
-class AddToBalance extends React.Component<IProps> {
+class AddToCredit extends React.Component<IProps> {
 
-  private customBalance: React.RefObject<HTMLInputElement>;
+  private customCredit: React.RefObject<HTMLInputElement>;
 
   constructor(props: IProps){
     super(props);
-    this.customBalance = React.createRef();
+    this.customCredit = React.createRef();
   }
 
   public render() {
@@ -22,7 +22,7 @@ class AddToBalance extends React.Component<IProps> {
     const numbers = [1,2,5];
 
     return (
-      <div className="add-to-balance">
+      <div className="add-to-credit">
         <div className="buttons-container">
           {this.props.error !== "" ? (
             <div className="alert alert-danger">
@@ -34,7 +34,7 @@ class AddToBalance extends React.Component<IProps> {
               <div key={i} className="col">
                 <button
                   className="btn btn-money btn-outline-gray btn-lg btn-block" 
-                  onClick={()=>this.props.onBalanceChange(n)}>
+                  onClick={()=>this.props.onCreditChange(n)}>
                   € <b>{n}</b>.00
                 </button>
               </div>
@@ -46,7 +46,7 @@ class AddToBalance extends React.Component<IProps> {
             <div className="row">
               <div className="col">
                 <input
-                  ref={this.customBalance}
+                  ref={this.customCredit}
                   type="number"
                   placeholder="Enter amount"
                   className="form-control form-control-lg" />
@@ -54,8 +54,8 @@ class AddToBalance extends React.Component<IProps> {
               <div className="col">
                 <button
                   className="btn btn-secondary btn-lg btn-block" 
-                  onClick={this.addCustomBalance}>
-                  Add to Balance
+                  onClick={this.addCustomCredit}>
+                  Add to Credit
                 </button>
               </div>
             </div>            
@@ -65,13 +65,17 @@ class AddToBalance extends React.Component<IProps> {
     );
   }
 
-  private addCustomBalance = (): void => {
-    if(this.customBalance.current) {
-      const value = this.customBalance.current.value;
-      this.props.onBalanceChange(parseInt(value, 10));
+  private addCustomCredit = (): void => {
+    if(this.customCredit.current) {
+      const stringValue = this.customCredit.current.value;
+      let value = parseFloat(stringValue);
+      if(isNaN(value) || value < 0){
+        value = 0;
+      }
+      this.props.onCreditChange(value);
     }
   }
 
 }
 
-export default AddToBalance;
+export default AddToCredit;

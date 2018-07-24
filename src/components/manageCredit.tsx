@@ -1,11 +1,10 @@
 import * as React from 'react';
 import Tabs from './tabs';
-import AddToBalance from './addToBalance';
-import PayBalance from './payBalance';
-
+import AddToCredit from './addToCredit';
+import PayCredit from './payCredit';
 
 enum CustomerView {
-  AddToBalance, PayBalance
+  AddToCredit, PayCredit
 }
 
 interface IState {
@@ -13,18 +12,20 @@ interface IState {
 }
 
 interface IProps {
-  onBalanceChange: (amount: number) => void;
-  onCancel: () => void;
+  credit: number,
   selectedAmount: number;
   error: string;
+  onCreditChange: (amount: number) => void;
+  onTabClicked?: () => void;
+  onCancel: () => void;
 }
 
-class ManageBalance extends React.Component<IProps, IState> {
+class ManageCredit extends React.Component<IProps, IState> {
 
   constructor(props:IProps) {
     super(props);
     this.state = {
-      customerView: CustomerView.AddToBalance
+      customerView: CustomerView.AddToCredit
     }
   }
 
@@ -32,7 +33,7 @@ class ManageBalance extends React.Component<IProps, IState> {
     return (
       <div className="customer-box">
         <Tabs 
-          data={[CustomerView.AddToBalance, CustomerView.PayBalance]} 
+          data={[CustomerView.AddToCredit, CustomerView.PayCredit]} 
           onClick={this.setCustomerView} 
           selected={this.state.customerView}
           render={this.renderTab}
@@ -47,23 +48,28 @@ class ManageBalance extends React.Component<IProps, IState> {
   private getCustomerView(): JSX.Element {
     switch(this.state.customerView) {
       default:
-      case CustomerView.AddToBalance:
-        return <AddToBalance {...this.props} />;
-      case CustomerView.PayBalance:
-        return <PayBalance {...this.props} />;
+      case CustomerView.AddToCredit:
+        return <AddToCredit {...this.props} />;
+      case CustomerView.PayCredit:
+        return <PayCredit {...this.props} />;
     }
   }
 
   private setCustomerView = (view: CustomerView): void => {
+    
+    if(this.props.onTabClicked){
+      this.props.onTabClicked();
+    }
+
     this.setState({
       customerView: view
     });
   }
 
   private renderTab(item: CustomerView): JSX.Element {
-    return item === CustomerView.AddToBalance ? <span>Add</span> : <span>Pay</span>;
+    return item === CustomerView.AddToCredit ? <span>Add</span> : <span>Pay</span>;
   }
 
 }
 
-export default ManageBalance;
+export default ManageCredit;

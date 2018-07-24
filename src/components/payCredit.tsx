@@ -1,13 +1,14 @@
 import * as React from 'react';
-import './addToBalance.scss';
+import './addToCredit.scss';
 
 interface IProps {
   error: string;
-  onBalanceChange: (value: number)=>void;
+  credit: number;
+  onCreditChange: (value: number)=>void;
   onCancel: () => void;
 }
 
-class PayBalance extends React.Component<IProps> {
+class PayCredit extends React.Component<IProps> {
 
   private amount: React.RefObject<HTMLInputElement>;
 
@@ -19,7 +20,7 @@ class PayBalance extends React.Component<IProps> {
   public render() {
 
     return (
-      <div className="add-to-balance">
+      <div className="add-to-credit">
         <div className="buttons-container">
           {this.props.error !== "" ? (
             <div className="alert alert-danger">
@@ -27,10 +28,11 @@ class PayBalance extends React.Component<IProps> {
             </div>
           ) : null}
           <div>
-            <p className="text-center">Pay your Balance now!</p>
+            <p className="text-center">Pay your Credit now!</p>
             <div className="row">
               <div className="col">
                 <input
+                  defaultValue={this.props.credit.toString()}
                   ref={this.amount}
                   type="number"
                   placeholder="Enter amount"
@@ -39,8 +41,8 @@ class PayBalance extends React.Component<IProps> {
               <div className="col">
                 <button
                   className="btn btn-secondary btn-lg btn-block" 
-                  onClick={this.addCustomBalance}>
-                  Add to Balance
+                  onClick={this.addCustomCredit}>
+                  Pay
                 </button>
               </div>
             </div>            
@@ -50,13 +52,17 @@ class PayBalance extends React.Component<IProps> {
     );
   }
 
-  private addCustomBalance = (): void => {
+  private addCustomCredit = (): void => {
     if(this.amount.current) {
-      const value = this.amount.current.value;
-      this.props.onBalanceChange(- parseInt(value, 10));
+      const stringValue = this.amount.current.value;
+      let value = parseFloat(stringValue);
+      if(isNaN(value) || value<0){
+        value = 0;
+      }
+      this.props.onCreditChange(- value);
     }
   }
 
 }
 
-export default PayBalance;
+export default PayCredit;

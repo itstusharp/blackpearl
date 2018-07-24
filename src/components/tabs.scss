@@ -1,19 +1,11 @@
 @import "../../node_modules/bootstrap/scss/functions";
 @import '../sass/_customVariables.scss';
 
-.buttons-container{
+.nav-tabs {
 
-  padding: 30px;
-
-  .btn-money {
-    height: 100px;
-    font-size: $font-size-lg;
-    letter-spacing: -0.5px;
-
-    b{
-      font-weight: normal;
-      font-size: $h3-font-size;
-    }
-
+  .nav-item {
+    width: 50%;
+    text-align: center;
   }
+
 }
