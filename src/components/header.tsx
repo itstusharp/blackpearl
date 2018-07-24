@@ -15,7 +15,7 @@ class Header extends React.Component<IProps> {
       <header className="main-header">
         <div className="logo" onClick={this.props.onClick}/>
         <div className="customer-data">
-          {customer ? <span>{customer.email} | Credit: $ {customer.credit + this.props.selectedAmount}</span> : null}
+          {customer ? <span>{customer.email} | Credit: € {customer.credit + this.props.selectedAmount}</span> : null}
         </div>
       </header>
     );

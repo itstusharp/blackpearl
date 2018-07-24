@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './search.scss';
-import ICustomer from '../models/customer'
+import ICustomer from '../models/customer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface IProps {
   customers: ICustomer[];
@@ -23,7 +24,14 @@ class Search extends React.Component<IProps, IState> {
   public render() {
     return (
       <div className="input-box-container">
-        <div className="input-box">
+        <div className="input-box">          
+          <h1 className="text-center">
+            <FontAwesomeIcon icon="coffee" color="#fed930" /><br/>
+            Top Up your Credit!
+          </h1>
+          <h3 className="text-center" style={{marginBottom: 40 }}>
+            ...or pay your debts
+          </h3>
           <div className="input-group input-group-lg">
             <div className="input-group-prepend">
               <span className="input-group-text" id="inputGroup-sizing-lg">@</span>

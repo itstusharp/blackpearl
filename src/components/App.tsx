@@ -5,6 +5,10 @@ import ICustomer from '../models/customer';
 import Search from './search';
 import ManageCredit from './manageCredit';
 import { Customer } from '../services/customer';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faCoffee, faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faCoffee,faPlusCircle, faMinusCircle);
 
 interface IState {
   selectedAmount: number;
@@ -77,7 +81,7 @@ class App extends React.Component<{}, IState> {
               <p className="text-center">
                 {message}<br />
                 Your current Credit is<br />
-                <b>€ {this.state.selectedAmount + this.state.selectedCustomer.credit}</b>
+                <span className="amount">€ <b>{this.state.selectedAmount + this.state.selectedCustomer.credit}</b></span>
               </p>
               <button
                 className="btn btn-outline-gray btn-lg btn-block" 

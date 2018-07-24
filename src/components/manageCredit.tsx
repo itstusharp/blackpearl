@@ -2,6 +2,7 @@ import * as React from 'react';
 import Tabs from './tabs';
 import AddToCredit from './addToCredit';
 import PayCredit from './payCredit';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 enum CustomerView {
   AddToCredit, PayCredit
@@ -67,7 +68,9 @@ class ManageCredit extends React.Component<IProps, IState> {
   }
 
   private renderTab(item: CustomerView): JSX.Element {
-    return item === CustomerView.AddToCredit ? <span>Add</span> : <span>Pay</span>;
+    return item === CustomerView.AddToCredit
+      ? <span><FontAwesomeIcon icon="plus-circle" color="#ccc" /> Add</span>
+      : <span><FontAwesomeIcon icon="minus-circle" color="#ccc" /> Pay</span>;
   }
 
 }
